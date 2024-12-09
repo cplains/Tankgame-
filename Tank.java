@@ -18,6 +18,7 @@ public class Tank {
         hull.draw(g);
         turret.draw(g, hull.getX() + hull.getWidth() / 2, hull.getY() + hull.getHeight() / 2);
 
+        // Draw bullets
         for (Bullet bullet : bullets) {
             bullet.draw(g);
         }
@@ -27,7 +28,7 @@ public class Tank {
         hull.update();
 
         // Ensure the tank does not go outside the screen bounds
-        if (hull.getX() < 0 || hull.getY() < 0 || 
+        if (hull.getX() < 0 || hull.getY() < 0 ||
             hull.getX() + hull.getWidth() > screenWidth || hull.getY() + hull.getHeight() > screenHeight ||
             gameMap.checkCollision(new Rectangle(hull.getX(), hull.getY(), hull.getWidth(), hull.getHeight()))) {
             hull.stop(); // Stop the tank if it collides with a wall or goes out of bounds
@@ -38,25 +39,25 @@ public class Tank {
         while (iterator.hasNext()) {
             Bullet bullet = iterator.next();
             bullet.update();
-            if (bullet.isOffScreen(screenWidth, screenHeight) || gameMap.checkCollision(new Rectangle(bullet.getX(), bullet.getY(), 16, 16))) {
-                iterator.remove(); // Remove bullets that are off-screen or collide with obstacles
+
+            // Remove bullets that are off-screen or collide with obstacles
+            if (bullet.isOffScreen(screenWidth, screenHeight) || gameMap.checkCollision(bullet.getBounds())) {
+                iterator.remove();
             }
         }
     }
 
     public void fire(String bulletImagePath) {
-        try {
-            int bulletX = hull.getX() + hull.getWidth() / 2;
-            int bulletY = hull.getY() + hull.getHeight() / 2;
-            double angle = Math.toRadians(turret.angle);
-
-            bullets.add(new Bullet(bulletX, bulletY, angle, bulletImagePath));
-            System.out.println("Fired bullet from (" + bulletX + ", " + bulletY + ") at angle: " + turret.angle);
-        } catch (IOException e) {
-            System.err.println("Error creating bullet.");
-            e.printStackTrace();
-        }
+        int bulletX = hull.getX() + hull.getWidth() / 2;
+        int bulletY = hull.getY() + hull.getHeight() / 2;
+        double angle = Math.toRadians(turret.angle);
+    
+        bullets.add(new Bullet(bulletX, bulletY, angle, bulletImagePath));
+        System.out.println("Fired bullet from (" + bulletX + ", " + bulletY + ") at angle: " + turret.angle);
+    
+        hull.fireBullet(); // Play firing sound
     }
+    
 
     public void move(double dx, double dy) {
         hull.move(dx, dy);
@@ -72,5 +73,14 @@ public class Tank {
 
     public TankHull getHull() {
         return hull;
+    }
+
+    public ArrayList<Bullet> getBullets() {
+        return bullets; // Expose the bullets list for collision checks
+    }
+
+    // Returns the hitbox of the tank
+    public Rectangle getBounds() {
+        return hull.getBounds();
     }
 }

@@ -46,13 +46,13 @@ public class Gamemap {
 
     private void createBorders() {
         // Top border
-        obstacles.add(new Rectangle(0, 0, mapWidth, cellSize / 5));
+        obstacles.add(new Rectangle(0, 0, mapWidth, cellSize / 4));
         // Bottom border
-        obstacles.add(new Rectangle(0, mapHeight - cellSize / 5, mapWidth, cellSize / 5));
+        obstacles.add(new Rectangle(0, mapHeight - cellSize / 4, mapWidth, cellSize / 4));
         // Left border
-        obstacles.add(new Rectangle(0, 0, cellSize / 5, mapHeight));
+        obstacles.add(new Rectangle(0, 0, cellSize / 4, mapHeight));
         // Right border
-        obstacles.add(new Rectangle(mapWidth - cellSize / 5, 0, cellSize / 5, mapHeight));
+        obstacles.add(new Rectangle(mapWidth - cellSize / 4, 0, cellSize / 4, mapHeight));
     }
 
     public void draw(Graphics g) {
