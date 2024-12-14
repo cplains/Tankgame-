@@ -1,0 +1,4 @@
+W,A,S,D to move tank one and SPACE to shoot
+Arrows to move ENTER to shoot
+AI is having issue it breaks the Gamne Canvas if adding the AI.
+Adding menue will break the whole code.

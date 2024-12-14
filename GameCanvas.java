@@ -11,6 +11,10 @@ public class GameCanvas extends JPanel implements KeyListener, MouseMotionListen
     private static final int MOVE_SPEED = 2;
     private static final String BULLET_IMAGE_PATH = "C:/Users/vbhak/OneDrive/Pictures/Tank_round.png";
     private boolean gameOver = false;
+    private long lastFrameTime = System.nanoTime(); // Time of the last frame
+private int frameCount = 0; // Count the number of frames
+private int fps = 0; // Calculated FPS value
+
 
     public GameCanvas() throws IOException {
         setFocusable(true);
@@ -95,7 +99,16 @@ public class GameCanvas extends JPanel implements KeyListener, MouseMotionListen
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         setBackground(Color.LIGHT_GRAY);
-
+    
+        // FPS Counter Logic
+        frameCount++;
+        long currentTime = System.nanoTime();
+        if (currentTime - lastFrameTime >= 1_000_000_000) { // One second passed
+            fps = frameCount; // Update FPS
+            frameCount = 0; // Reset frame count
+            lastFrameTime = currentTime; // Reset timer
+        }
+    
         if (!gameOver) {
             gameMap.draw(g); // Draw the map
             playerOneTank.draw(g); // Draw Player 1's tank
@@ -105,8 +118,13 @@ public class GameCanvas extends JPanel implements KeyListener, MouseMotionListen
             g.setFont(new Font("Arial", Font.BOLD, 50));
             g.drawString("Game Over!", getWidth() / 2 - 150, getHeight() / 2);
         }
+    
+        // Draw FPS Counter
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.PLAIN, 14));
+        g.drawString("FPS: " + fps, 10, 20); // Display FPS at the top-left corner
     }
-
+    
     @Override
     public void keyPressed(KeyEvent e) {
         if (gameOver) return; // Disable input after game over
